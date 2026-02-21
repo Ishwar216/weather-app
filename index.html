@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Weather App</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(to right, #4facfe, #00f2fe);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            text-align: center;
+            width: 300px;
+            box-shadow: 0px 4px 10px rgba(0,0,0,0.2);
+        }
+
+        input {
+            padding: 10px;
+            width: 80%;
+            margin-bottom: 10px;
+        }
+
+        button {
+            padding: 10px 20px;
+            background: #4facfe;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        button:hover {
+            background: #00c6ff;
+        }
+
+        #weatherResult {
+            margin-top: 15px;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Weather App</h1>
+
+        <input type="text" id="cityInput" placeholder="Enter city name">
+        <br>
+        <button onclick="getWeather()">Get Weather</button>
+
+        <div id="weatherResult"></div>
+    </div>
+
+    <script>
+        function getWeather() {
+            const city = document.getElementById("cityInput").value;
+            const apiKey = "0576548be9ae427392d82505262102";
+
+            if (city === "") {
+                alert("Please enter a city name");
+                return;
+            }
+
+            const url = `http://api.weatherapi.com/v1/current.json?key=${apiKey}&q=${city}&aqi=yes`;
+
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error) {
+                        document.getElementById("weatherResult").innerHTML = "City not found!";
+                    } else {
+                        const temperature = data.current.temp_c;
+                        const condition = data.current.condition.text;
+
+                        document.getElementById("weatherResult").innerHTML =
+                            `Temperature in ${city}: ${temperature}°C <br> Condition: ${condition}`;
+                    }
+                })
+                .catch(error => {
+                    document.getElementById("weatherResult").innerHTML = "Error fetching data!";
+                });
+        }
+    </script>
+
+</body>
+</html>
